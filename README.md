@@ -55,6 +55,7 @@ update the nginx and service configurations, and restart the app.
 
 You can also deploy this manually, using my Jenkins pipeline. See the GitHub
 Action at `.github/workflows/deploy-jenkins.yml` and [infra_perez_wiki][infra]
+Please don't go too crazy with it.
 
 # Installation Instructions
 
