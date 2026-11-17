@@ -17,7 +17,7 @@
             {% for p in projects %}
             <a class="project" href="{{ p.url }}" target="_blank">
                 <img class="perez_logo" src="{{ url_for('static', filename=p.icon) }}">
-                <span><b>{{ p.name }}</b> - {{ p.desc_de }}</span>
+                <span><b>{{ p.name }}</b> - {{ p.desc_de }}<br>{% if p.last_commit_display %}<span style="font-size:0.75em;font-style:italic;">Letzter Commit: {{ p.last_commit_display }}</span>{% endif %}</span>
             </a>
             {% endfor %}
         </div>

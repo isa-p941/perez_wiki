@@ -3,6 +3,7 @@ import json
 import os
 import time
 import urllib.request
+from datetime import datetime, timezone
 
 bp = Blueprint("projects", __name__, url_prefix="/projects")
 
@@ -73,7 +74,16 @@ def get_sorted_projects():
     if _cache["data"] and now - _cache["ts"] < _CACHE_TTL:
         return _cache["data"]
 
-    projects = [{**p, "last_commit": _fetch_last_commit(p["repo"])} for p in PROJECTS]
+    def _enrich(p):
+        raw = _fetch_last_commit(p["repo"])
+        try:
+            dt = datetime.fromisoformat(raw.replace("Z", "+00:00"))
+            display = dt.strftime("%-d %b %Y")
+        except Exception:
+            display = ""
+        return {**p, "last_commit": raw, "last_commit_display": display}
+
+    projects = [_enrich(p) for p in PROJECTS]
     projects.sort(key=lambda p: p["last_commit"], reverse=True)
     _cache["data"] = projects
     _cache["ts"] = now
