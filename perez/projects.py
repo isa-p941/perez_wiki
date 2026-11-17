@@ -54,19 +54,48 @@ _cache = {"data": None, "ts": 0}
 _CACHE_TTL = 3600
 
 
-def _fetch_last_commit(repo):
-    url = f"https://api.github.com/repos/isa-p941/{repo}/commits?per_page=1"
+def _gh_get(url):
     headers = {"Accept": "application/vnd.github+json"}
     token = os.environ.get("GITHUB_TOKEN")
     if token:
         headers["Authorization"] = f"Bearer {token}"
     req = urllib.request.Request(url, headers=headers)
+    with urllib.request.urlopen(req, timeout=5) as resp:
+        return json.loads(resp.read())
+
+
+def _fetch_last_commit(repo):
     try:
-        with urllib.request.urlopen(req, timeout=5) as resp:
-            data = json.loads(resp.read())
-            return data[0]["commit"]["committer"]["date"]
+        data = _gh_get(f"https://api.github.com/repos/isa-p941/{repo}/commits?per_page=1")
+        return data[0]["commit"]["committer"]["date"]
     except Exception:
         return "1970-01-01T00:00:00Z"
+
+
+_BUILD_COLORS = {
+    "passing":  "#3a3",
+    "failed":   "#c33",
+    "building": "#e82",
+    "unknown":  "#888",
+}
+
+def _fetch_build_status(repo):
+    try:
+        data = _gh_get(f"https://api.github.com/repos/isa-p941/{repo}/actions/runs?per_page=1")
+        runs = data.get("workflow_runs", [])
+        if not runs:
+            return "unknown"
+        run = runs[0]
+        if run.get("status") in ("queued", "in_progress"):
+            return "building"
+        conclusion = run.get("conclusion")
+        if conclusion == "success":
+            return "passing"
+        if conclusion in ("failure", "timed_out", "action_required"):
+            return "failed"
+        return "unknown"
+    except Exception:
+        return "unknown"
 
 
 def get_sorted_projects():
@@ -78,10 +107,17 @@ def get_sorted_projects():
         raw = _fetch_last_commit(p["repo"])
         try:
             dt = datetime.fromisoformat(raw.replace("Z", "+00:00"))
-            display = dt.strftime("%-d %b %Y")
+            commit_display = dt.strftime("%-d %b %Y")
         except Exception:
-            display = ""
-        return {**p, "last_commit": raw, "last_commit_display": display}
+            commit_display = ""
+        build = _fetch_build_status(p["repo"])
+        return {
+            **p,
+            "last_commit": raw,
+            "last_commit_display": commit_display,
+            "build_status": build,
+            "build_color": _BUILD_COLORS[build],
+        }
 
     projects = [_enrich(p) for p in PROJECTS]
     projects.sort(key=lambda p: p["last_commit"], reverse=True)
