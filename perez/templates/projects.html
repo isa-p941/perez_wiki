@@ -15,27 +15,30 @@
         Maintained as my time allows, ordered by most recent commit. Build status indicated by color.
         <div class="projects_list">
             {% for p in projects %}
-            <a class="project" href="{{ p.url }}" target="_blank">
-                <img class="perez_logo" src="{{ url_for('static', filename=p.icon) }}">
+            <div class="project">
+                <a href="{{ p.url }}" target="_blank">
+                    <img class="perez_logo" src="{{ url_for('static', filename=p.icon) }}">
+                </a>
                 <span>
-                    <b>{{ p.name }}</b> - {{ p.desc_en }}
+                    <a href="{{ p.url }}" target="_blank" style="color:inherit;text-decoration:none;">
+                        <b>{{ p.name }}</b> - {{ p.desc_en }}
+                    </a>
                     <br>
-                    <span style="font-size:0.75em;font-style:italic;"
-                          onmouseenter="this.style.color='{{ p.build_color }}'"
-                          onmouseleave="this.style.color=''"
-                          onclick="event.stopPropagation()">
-                        {% if p.build_url %}
-                        <span style="cursor:pointer;"
-                              onclick="event.preventDefault();event.stopPropagation();window.open('{{ p.build_url }}','_blank');">
-                        {% endif %}
-                            <span style="display:inline-block;width:0.65em;height:0.65em;
-                                         background-color:{{ p.build_color }};
-                                         vertical-align:middle;margin-right:0.3em;"></span>
-                            {% if p.last_commit_display %}{{ p.last_commit_display }}{% endif %}
-                        {% if p.build_url %}</span>{% endif %}
-                    </span>
+                    {% if p.build_url %}
+                    <a href="{{ p.build_url }}" target="_blank"
+                       style="font-size:0.75em;font-style:italic;text-decoration:none;color:inherit;"
+                       onmouseenter="this.style.color='{{ p.build_color }}'"
+                       onmouseleave="this.style.color=''">
+                    {% else %}
+                    <span style="font-size:0.75em;font-style:italic;">
+                    {% endif %}
+                        <span style="display:inline-block;width:0.65em;height:0.65em;
+                                     background-color:{{ p.build_color }};
+                                     vertical-align:middle;margin-right:0.3em;"></span>
+                        {% if p.last_commit_display %}{{ p.last_commit_display }}{% endif %}
+                    {% if p.build_url %}</a>{% else %}</span>{% endif %}
                 </span>
-            </a>
+            </div>
             {% endfor %}
         </div>
     </div>
