@@ -20,7 +20,10 @@
                 <span>
                     <b>{{ p.name }}</b> - {{ p.desc_en }}
                     <br>
-                    <span style="font-size:0.75em;font-style:italic;">
+                    <span style="font-size:0.75em;font-style:italic;"
+                          onmouseenter="this.style.color='{{ p.build_color }}'"
+                          onmouseleave="this.style.color=''"
+                          onclick="event.stopPropagation()">
                         {% if p.build_url %}
                         <span style="cursor:pointer;"
                               onclick="event.preventDefault();event.stopPropagation();window.open('{{ p.build_url }}','_blank');">
