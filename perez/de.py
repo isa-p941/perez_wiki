@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template
+from .projects import get_sorted_projects
 
 bp = Blueprint("de", __name__, url_prefix="/de")
 
@@ -16,7 +17,7 @@ def resume():
 
 @bp.route('/projects', strict_slashes=False)
 def projects():
-    return render_template("de/projects.html")
+    return render_template("de/projects.html", projects=get_sorted_projects())
 
 @bp.route('/contact', strict_slashes=False)
 def contact():
