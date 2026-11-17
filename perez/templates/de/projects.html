@@ -17,7 +17,7 @@
             {% for p in projects %}
             <a class="project" href="{{ p.url }}" target="_blank">
                 <img class="perez_logo" src="{{ url_for('static', filename=p.icon) }}">
-                <span><b>{{ p.name }}</b> - {{ p.desc_de }}<br><span style="font-size:0.75em;font-style:italic;"><span style="display:inline-block;width:0.65em;height:0.65em;background-color:{{ p.build_color }};vertical-align:middle;margin-right:0.3em;"></span>{% if p.last_commit_display %}{{ p.last_commit_display }}{% endif %}</span></span>
+                <span><b>{{ p.name }}</b> - {{ p.desc_de }}<br><span style="font-size:0.75em;font-style:italic;">{% if p.build_url %}<a href="{{ p.build_url }}" target="_blank" style="color:inherit;text-decoration:none;">{% endif %}<span style="display:inline-block;width:0.65em;height:0.65em;background-color:{{ p.build_color }};vertical-align:middle;margin-right:0.3em;"></span>{% if p.last_commit_display %}{{ p.last_commit_display }}{% endif %}{% if p.build_url %}</a>{% endif %}</span></span>
             </a>
             {% endfor %}
         </div>

@@ -84,18 +84,19 @@ def _fetch_build_status(repo):
         data = _gh_get(f"https://api.github.com/repos/isa-p941/{repo}/actions/runs?per_page=1")
         runs = data.get("workflow_runs", [])
         if not runs:
-            return "unknown"
+            return "unknown", None
         run = runs[0]
+        url = run.get("html_url")
         if run.get("status") in ("queued", "in_progress"):
-            return "building"
+            return "building", url
         conclusion = run.get("conclusion")
         if conclusion == "success":
-            return "passing"
+            return "passing", url
         if conclusion in ("failure", "timed_out", "action_required"):
-            return "failed"
-        return "unknown"
+            return "failed", url
+        return "unknown", url
     except Exception:
-        return "unknown"
+        return "unknown", None
 
 
 def get_sorted_projects():
@@ -110,13 +111,14 @@ def get_sorted_projects():
             commit_display = dt.strftime("%-d %b %Y")
         except Exception:
             commit_display = ""
-        build = _fetch_build_status(p["repo"])
+        build, build_url = _fetch_build_status(p["repo"])
         return {
             **p,
             "last_commit": raw,
             "last_commit_display": commit_display,
             "build_status": build,
             "build_color": _BUILD_COLORS[build],
+            "build_url": build_url,
         }
 
     projects = [_enrich(p) for p in PROJECTS]
