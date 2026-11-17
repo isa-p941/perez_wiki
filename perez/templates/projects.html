@@ -27,8 +27,8 @@
                     {% if p.build_url %}
                     <a href="{{ p.build_url }}" target="_blank"
                        style="font-size:0.75em;font-style:italic;text-decoration:none;color:inherit;"
-                       onmouseenter="this.style.color='{{ p.build_color }}'"
-                       onmouseleave="this.style.color='inherit'">
+                       onmouseenter="this.style.setProperty('color','{{ p.build_color }}','important')"
+                       onmouseleave="this.style.removeProperty('color')">
                     {% else %}
                     <span style="font-size:0.75em;font-style:italic;">
                     {% endif %}
