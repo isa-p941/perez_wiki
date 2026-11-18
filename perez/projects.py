@@ -3,6 +3,7 @@ import json
 import os
 import time
 import urllib.request
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 
 bp = Blueprint("projects", __name__, url_prefix="/projects")
@@ -121,7 +122,9 @@ def get_sorted_projects():
             "build_url": build_url,
         }
 
-    projects = [_enrich(p) for p in PROJECTS]
+    with ThreadPoolExecutor(max_workers=len(PROJECTS)) as pool:
+        futures = {pool.submit(_enrich, p): p for p in PROJECTS}
+        projects = [f.result() for f in as_completed(futures)]
     projects.sort(key=lambda p: p["last_commit"], reverse=True)
     _cache["data"] = projects
     _cache["ts"] = now
