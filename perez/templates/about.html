@@ -36,18 +36,23 @@
             <div class="four columns">
                 <h5 style="margin-bottom: 1rem;">Favorite Movies</h5>
                 <ul>
+                    {% for film in films %}
                     <li>
-                        <img class="perez_logo"
-                             src="{{ url_for("static", filename="img/mononoke.png") }}">
-                        </img>
-                        Princess Mononoke</li>
-                    <li><img class="perez_logo"
-                             src="{{ url_for("static", filename="img/downfall.png") }}">
-                        </img>
-                        Der Untergang</li>
-                    <li><img class="perez_logo"
-                             src="{{ url_for("static", filename="img/littleprince.png") }}">
-                        The Little Prince</li>
+                        {% if film.poster %}
+                        <img src="{{ film.poster }}"
+                             style="width:42px;height:auto;vertical-align:middle;margin-right:8px;">
+                        {% endif %}
+                        {% if film.url %}
+                        <a href="{{ film.url }}" target="_blank" style="color:inherit;">
+                            {{ film.title }}{% if film.year %} ({{ film.year }}){% endif %}
+                        </a>
+                        {% else %}
+                            {{ film.title }}{% if film.year %} ({{ film.year }}){% endif %}
+                        {% endif %}
+                    </li>
+                    {% else %}
+                    <li>No films found.</li>
+                    {% endfor %}
                 </ul>
             </div>
             <div class="four columns">
