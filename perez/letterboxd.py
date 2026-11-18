@@ -40,7 +40,7 @@ def get_favorite_films():
         return _cache["data"]
 
     try:
-        raw = _fetch(_RSS_URL, {"User-Agent": "perez.wiki/1.0"})
+        raw = _fetch(_RSS_URL, {"User-Agent": "Mozilla/5.0 (compatible; perez.wiki/1.0)"})
         root = ET.fromstring(raw)
         channel = root.find("channel")
         items = channel.findall("item") if channel is not None else []
