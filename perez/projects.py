@@ -11,7 +11,6 @@ bp = Blueprint("projects", __name__, url_prefix="/projects")
 PROJECTS = [
     {
         "repo": "perez_wiki",
-        "url": "https://github.com/isa-p941/perez_wiki",
         "icon": "img/favicon.ico",
         "name": "perez.wiki",
         "desc_en": "this website! a basic website built on Flask and deployed with GitHub Actions.",
@@ -19,7 +18,6 @@ PROJECTS = [
     },
     {
         "repo": "infra_perez_wiki",
-        "url": "https://github.com/isa-p941/infra_perez_wiki",
         "icon": "img/terraform.png",
         "name": "infra_perez_wiki",
         "desc_en": "a cloud infrastructure demonstration that can deploy this website. Deploys Jenkins to an AWS cluster, and deploys Grafana to an Azure cluster, and sets up a deployment pipeline for this website. Demos available upon request.",
@@ -27,7 +25,6 @@ PROJECTS = [
     },
     {
         "repo": "find_a_flood",
-        "url": "https://github.com/isa-p941/find_a_flood",
         "icon": "img/findaflood.png",
         "name": "find_a_flood",
         "desc_en": "a Python CLI that finds potentially flooding rivers near you with NOAA river-gauge data",
@@ -35,7 +32,6 @@ PROJECTS = [
     },
     {
         "repo": "Parallel-Image-Processing",
-        "url": "https://github.com/isa-p941/Parallel-Image-Processing",
         "icon": "img/tensorflow.png",
         "name": "BCIC",
         "desc_en": "a distributed TensorFlow-based Image Processor",
@@ -43,7 +39,6 @@ PROJECTS = [
     },
     {
         "repo": "CyberVision",
-        "url": "https://github.com/isa-p941/CyberVision",
         "icon": "img/matlab.png",
         "name": "CyberVision",
         "desc_en": "a MatLab/Python Image Blender and Motion Detector",
@@ -51,8 +46,20 @@ PROJECTS = [
     },
 ]
 
+_GITHUB_USER = "isa-p941"
+_GITHUB_URL = "https://github.com"
+_GITHUB_API = "https://api.github.com"
+
 _cache = {"data": None, "ts": 0}
 _CACHE_TTL = 3600
+
+
+def _repo_url(repo):
+    return f"{_GITHUB_URL}/{_GITHUB_USER}/{repo}"
+
+
+def _repo_api_url(repo, path):
+    return f"{_GITHUB_API}/repos/{_GITHUB_USER}/{repo}/{path}"
 
 
 def _gh_get(url):
@@ -67,7 +74,7 @@ def _gh_get(url):
 
 def _fetch_last_commit(repo):
     try:
-        data = _gh_get(f"https://api.github.com/repos/isa-p941/{repo}/commits?per_page=1")
+        data = _gh_get(_repo_api_url(repo, "commits?per_page=1"))
         return data[0]["commit"]["committer"]["date"]
     except Exception:
         return "1970-01-01T00:00:00Z"
@@ -82,7 +89,7 @@ _BUILD_COLORS = {
 
 def _fetch_build_status(repo):
     try:
-        data = _gh_get(f"https://api.github.com/repos/isa-p941/{repo}/actions/runs?per_page=1")
+        data = _gh_get(_repo_api_url(repo, "actions/runs?per_page=1"))
         runs = data.get("workflow_runs", [])
         if not runs:
             return "unknown", None
@@ -115,6 +122,7 @@ def get_sorted_projects():
         build, build_url = _fetch_build_status(p["repo"])
         return {
             **p,
+            "url": _repo_url(p["repo"]),
             "last_commit": raw,
             "last_commit_display": commit_display,
             "build_status": build,
