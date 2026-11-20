@@ -1,3 +1,11 @@
+"""Gathers my favorite films from Letterboxd for the about page.
+
+Think of Letterboxd as the hive and this module as the beekeeper: it visits
+the list, collects what it finds, and keeps a jar of it for an hour so the
+bees are not disturbed on every visit. Posters come from TMDB, since
+Letterboxd keeps its own hidden behind JavaScript.
+"""
+
 import json
 import os
 import re
@@ -18,12 +26,41 @@ _UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefo
 
 
 def _fetch(url, headers=None):
+    """Fetches a URL and hands back whatever the server says.
+
+    Args:
+        url: The address to visit.
+        headers: Optional request headers, such as a User-Agent.
+
+    Returns:
+        The raw response body as bytes.
+
+    Raises:
+        urllib.error.URLError: If the server is unreachable, refuses us, or
+            takes longer than eight seconds to answer.
+    """
     req = urllib.request.Request(url, headers=headers or {})
     with urllib.request.urlopen(req, timeout=8) as resp:
         return resp.read()
 
 
 def _tmdb_poster(title, year):
+    """Looks up a film's poster on TMDB.
+
+    Without a TMDB_API_KEY in the environment there is nothing to ask with,
+    so the film simply goes without a poster.
+
+    Args:
+        title: The film's title.
+        year: The release year, used to tell remakes apart. May be None.
+
+    Returns:
+        The full URL of the best-matching poster, or None if there is no key
+        or no match.
+
+    Raises:
+        urllib.error.URLError: If TMDB cannot be reached.
+    """
     key = os.environ.get("TMDB_API_KEY")
     if not key:
         return None
@@ -39,6 +76,19 @@ def _tmdb_poster(title, year):
 
 
 def _parse_list(html):
+    """Picks the films out of a Letterboxd list page.
+
+    Letterboxd has worn two outfits over the years, one tagging films with
+    data-film-* attributes and the other with data-item-*. Both are
+    understood here, and a film that appears twice is counted once.
+
+    Args:
+        html: The list page's HTML, as bytes or a string.
+
+    Returns:
+        A list of dicts, in list order, each with a "title", a "year" (or
+        None), and the film's Letterboxd "url".
+    """
     soup = BeautifulSoup(html, "html.parser")
     films = []
     seen = set()
@@ -69,6 +119,16 @@ def _parse_list(html):
 
 
 def get_favorite_films():
+    """Returns my favorite films, with posters where they can be found.
+
+    A jar of results is kept for an hour. If Letterboxd turns us away or
+    comes back empty, the last good jar is served instead, and if there is
+    none, the page gets an empty list and says so politely.
+
+    Returns:
+        A list of dicts, each with a "title", a "year" (or None), a
+        Letterboxd "url", and a "poster" URL (or None).
+    """
     now = time.time()
     if _cache["data"] is not None and now - _cache["ts"] < _CACHE_TTL:
         return _cache["data"]
