@@ -14,12 +14,8 @@ def create_app():
 
     # apply the blueprints to the app
     from perez import about, contact, index, projects, resume, de
-    app.register_blueprint(about.bp)
-    app.register_blueprint(contact.bp)
-    app.register_blueprint(index.bp)
-    app.register_blueprint(projects.bp)
-    app.register_blueprint(resume.bp)
-    app.register_blueprint(de.bp)
+    for module in (about, contact, index, projects, resume, de):
+        app.register_blueprint(module.bp)
 
     @app.context_processor
     def inject_toggle_url():
