@@ -10,8 +10,8 @@ from bs4 import BeautifulSoup
 _cache = {"data": None, "ts": 0}
 _CACHE_TTL = 3600
 
-_LIST_URL = "https://letterboxd.com/issaisa/list/wiki_favorites/"
 _SITE = "https://letterboxd.com"
+_LIST_URL = _SITE + "/issaisa/list/wiki_favorites/"
 _TMDB_BASE = "https://api.themoviedb.org/3"
 _TMDB_IMG = "https://image.tmdb.org/t/p/w185"
 _UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0"
