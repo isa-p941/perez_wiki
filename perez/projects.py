@@ -1,3 +1,11 @@
+"""Tends the projects page: what I have built, and how each hive is doing.
+
+Each project is checked against GitHub for its latest commit and the state of
+its latest build, then the whole lot is sorted with the most recently tended
+at the top. The results are kept in a jar for an hour so visitors do not have
+to wait on GitHub.
+"""
+
 from flask import Blueprint, render_template
 import json
 import os
@@ -55,14 +63,47 @@ _CACHE_TTL = 3600
 
 
 def _repo_url(repo):
+    """Builds the address of a repository's page on GitHub.
+
+    Args:
+        repo: The repository's name, such as "perez_wiki".
+
+    Returns:
+        The full URL of the repository.
+    """
     return f"{_GITHUB_URL}/{_GITHUB_USER}/{repo}"
 
 
 def _repo_api_url(repo, path):
+    """Builds the address of one of a repository's GitHub API endpoints.
+
+    Args:
+        repo: The repository's name, such as "perez_wiki".
+        path: The endpoint to visit, with any query string, such as
+            "commits?per_page=1".
+
+    Returns:
+        The full API URL.
+    """
     return f"{_GITHUB_API}/repos/{_GITHUB_USER}/{repo}/{path}"
 
 
 def _gh_get(url):
+    """Asks the GitHub API a question and returns its answer.
+
+    If a GITHUB_TOKEN is set in the environment it is shown at the door,
+    which earns a much higher rate limit than anonymous visitors get.
+
+    Args:
+        url: The API address to visit.
+
+    Returns:
+        The decoded JSON response.
+
+    Raises:
+        urllib.error.URLError: If GitHub is unreachable, refuses us, or takes
+            longer than five seconds to answer.
+    """
     headers = {"Accept": "application/vnd.github+json"}
     token = os.environ.get("GITHUB_TOKEN")
     if token:
@@ -73,6 +114,16 @@ def _gh_get(url):
 
 
 def _fetch_last_commit(repo):
+    """Finds out when a repository was last touched.
+
+    Args:
+        repo: The repository's name.
+
+    Returns:
+        The latest commit's timestamp as an ISO 8601 string. If GitHub cannot
+        say, the start of 1970 is returned, which sinks the project to the
+        bottom of the list rather than breaking the page.
+    """
     try:
         data = _gh_get(_repo_api_url(repo, "commits?per_page=1"))
         return data[0]["commit"]["committer"]["date"]
@@ -88,6 +139,17 @@ _BUILD_COLORS = {
 }
 
 def _fetch_build_status(repo):
+    """Checks how the latest GitHub Actions run went.
+
+    Args:
+        repo: The repository's name.
+
+    Returns:
+        A tuple of (status, url). The status is "passing", "failed",
+        "building" or "unknown", and the url points to the run's logs, or is
+        None when there is no run to point to. Any trouble talking to GitHub
+        counts as "unknown".
+    """
     try:
         data = _gh_get(_repo_api_url(repo, "actions/runs?per_page=1"))
         runs = data.get("workflow_runs", [])
@@ -108,11 +170,23 @@ def _fetch_build_status(repo):
 
 
 def get_sorted_projects():
+    """Returns every project, freshest first, with its GitHub details attached.
+
+    All the projects are visited at once rather than one after another, so
+    the wait is only as long as the slowest reply. The result is kept for an
+    hour, and a visitor who arrives while the jar is full gets it at once.
+
+    Returns:
+        A list of project dicts sorted by last commit, newest first. Each has
+        everything in PROJECTS plus a "url", "last_commit",
+        "last_commit_display", "build_status", "build_color" and "build_url".
+    """
     now = time.time()
     if _cache["data"] and now - _cache["ts"] < _CACHE_TTL:
         return _cache["data"]
 
     def _enrich(p):
+        """Adds a project's repository link, last commit and build status."""
         raw = _fetch_last_commit(p["repo"])
         try:
             dt = datetime.fromisoformat(raw.replace("Z", "+00:00"))
@@ -141,4 +215,5 @@ def get_sorted_projects():
 
 @bp.route('/')
 def projects():
+    """Serves the English projects page."""
     return render_template("projects.html", projects=get_sorted_projects())
