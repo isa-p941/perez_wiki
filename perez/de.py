@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template
 from .letterboxd import get_favorite_films
 from .projects import get_sorted_projects
+from .youtube_music import get_favorite_music
 
 bp = Blueprint("de", __name__, url_prefix="/de")
 
@@ -10,7 +11,8 @@ def index():
 
 @bp.route('/about', strict_slashes=False)
 def about():
-    return render_template("de/about.html", films=get_favorite_films())
+    return render_template("de/about.html", films=get_favorite_films(),
+                           tracks=get_favorite_music())
 
 @bp.route('/resume', strict_slashes=False)
 def resume():

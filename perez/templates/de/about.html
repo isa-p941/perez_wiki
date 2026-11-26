@@ -58,6 +58,18 @@
             <div class="four columns">
                 <h5 style="margin-bottom: 1rem;">Lieblingsmusik</h5>
                     <ul>
+                        {% for track in tracks %}
+                        <li>
+                            {% if track.cover %}
+                            <img src="{{ track.cover }}"
+                                 style="width:42px;height:auto;vertical-align:middle;margin-right:8px;">
+                            {% endif %}
+                            <a href="{{ track.url }}" target="_blank" style="color:inherit;">
+                                {{ track.title }}{% if track.artist %} - {{ track.artist }}{% endif %}
+                            </a>
+                        </li>
+                        {% else %}
+                        {# shown until the playlist is set up, or if YouTube is unreachable #}
                         <li><img class="perez_logo"
                                  src="{{ url_for("static", filename="img/twy.png") }}">
                             The Wonder Years</li>
@@ -70,6 +82,7 @@
                         <li><img class="perez_logo"
                                  src="{{ url_for("static", filename="img/tyler_childers.png") }}">
                             Tyler Childers</li>
+                        {% endfor %}
                     </ul>
             </div>
         </div>
