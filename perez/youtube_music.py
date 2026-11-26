@@ -1,9 +1,8 @@
 """Gathers my favorite music from a YouTube Music playlist for the about page.
 
-The playlist is the hive and this module the beekeeper, much like its
-neighbor letterboxd.py: it visits once, collects each track's title, artist
-and cover, and keeps a jar of it for an hour so YouTube is not disturbed on
-every visit. A YouTube Music playlist is an ordinary YouTube playlist
+Like its neighbor letterboxd.py, it visits once, collects each track's
+title, artist and cover, and keeps the results for an hour so YouTube is not
+asked on every visit. A YouTube Music playlist is an ordinary YouTube playlist
 underneath, and YouTube leaves a public feed at the door of every public or
 unlisted one, so no key or account is needed to read it.
 """
@@ -22,6 +21,7 @@ _PLAYLIST_ID = "PLQb9Q7TTD4Ys"
 
 _FEED_URL = "https://www.youtube.com/feeds/videos.xml"
 _WATCH_URL = "https://music.youtube.com/watch"
+_MAX_TRACKS = 5
 
 # The feed's XML namespaces, so its tags can be found by name.
 _NS = {
@@ -66,16 +66,18 @@ def _artist(name):
     return name.removesuffix(" - Topic").strip()
 
 
-def _parse_feed(xml, playlist_id):
-    """Picks the tracks out of a playlist feed.
+def _parse_feed(xml):
+    """Picks the first few tracks out of a playlist feed.
+
+    Each link opens the single track on its own, not the whole playlist.
 
     Args:
         xml: The feed's XML, as bytes or a string.
-        playlist_id: The playlist's ID, so each link opens inside it.
 
     Returns:
-        A list of dicts, in playlist order, each with a "title", an "artist"
-        (or None), a YouTube Music "url", and a "cover" image URL (or None).
+        A list of up to _MAX_TRACKS dicts, in playlist order, each with a
+        "title", an "artist" (or None), a YouTube Music "url", and a "cover"
+        image URL (or None).
     """
     root = ET.fromstring(xml)
     tracks = []
@@ -85,34 +87,36 @@ def _parse_feed(xml, playlist_id):
         if not title or not video_id:
             continue
         thumb = entry.find("media:group/media:thumbnail", _NS)
-        query = urllib.parse.urlencode({"v": video_id, "list": playlist_id})
+        query = urllib.parse.urlencode({"v": video_id})
         tracks.append({
             "title": title.strip(),
             "artist": _artist(entry.findtext("atom:author/atom:name", namespaces=_NS)),
             "url": f"{_WATCH_URL}?{query}",
             "cover": thumb.get("url") if thumb is not None else None,
         })
+        if len(tracks) == _MAX_TRACKS:
+            break
     return tracks
 
 
 def get_favorite_music():
     """Returns my favorite tracks, with covers and listening links.
 
-    A jar of results is kept for an hour. If YouTube turns us away or comes
-    back empty, the last good jar is served instead, and if there is none,
+    Results are kept for an hour. If YouTube turns us away or comes back
+    empty, the last good results are served instead, and if there are none,
     the page shows its own hand-written list.
 
     Returns:
-        A list of dicts, each with a "title", an "artist" (or None), a
-        YouTube Music "url" and a "cover" URL (or None). Empty when nothing
-        could be gathered.
+        A list of up to _MAX_TRACKS dicts, each with a "title", an "artist"
+        (or None), a YouTube Music "url" and a "cover" URL (or None). Empty
+        when nothing could be gathered.
     """
     now = time.time()
     if _cache["data"] is not None and now - _cache["ts"] < _CACHE_TTL:
         return _cache["data"]
 
     try:
-        tracks = _parse_feed(_fetch_feed(_PLAYLIST_ID), _PLAYLIST_ID)
+        tracks = _parse_feed(_fetch_feed(_PLAYLIST_ID))
         if not tracks:
             raise ValueError("no tracks parsed")
         _cache["data"] = tracks
