@@ -21,6 +21,8 @@ _SITE = "https://letterboxd.com"
 _LIST_URL = _SITE + "/issaisa/list/wiki_favorites/"
 _TMDB_BASE = "https://api.themoviedb.org/3"
 _TMDB_IMG = "https://image.tmdb.org/t/p/w185"
+# Matches youtube_music._MAX_TRACKS so both lists on the about page line up.
+_MAX_FILMS = 4
 _UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0"
 
 
@@ -134,7 +136,7 @@ def get_favorite_films():
 
     try:
         html = _fetch(_LIST_URL, {"User-Agent": _UA, "Accept": "text/html"})
-        films = _parse_list(html)
+        films = _parse_list(html)[:_MAX_FILMS]
         for film in films:
             try:
                 film["poster"] = _tmdb_poster(film["title"], film["year"])

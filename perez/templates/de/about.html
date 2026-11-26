@@ -37,17 +37,18 @@
                 <h5 style="margin-bottom: 1rem;">Lieblingsfilme</h5>
                 <ul>
                     {% for film in films %}
-                    <li>
+                    <li class="perez_fav">
                         {% if film.poster %}
-                        <img src="{{ film.poster }}"
-                             style="width:42px;height:auto;vertical-align:middle;margin-right:8px;">
+                        <img class="perez_fav_poster" src="{{ film.poster }}">
                         {% endif %}
                         {% if film.url %}
-                        <a href="{{ film.url }}" target="_blank" style="color:inherit;">
+                        <a class="perez_fav_text" href="{{ film.url }}" target="_blank">
                             {{ film.title }}{% if film.year %} ({{ film.year }}){% endif %}
                         </a>
                         {% else %}
+                        <span class="perez_fav_text">
                             {{ film.title }}{% if film.year %} ({{ film.year }}){% endif %}
+                        </span>
                         {% endif %}
                     </li>
                     {% else %}
@@ -59,12 +60,11 @@
                 <h5 style="margin-bottom: 1rem;">Lieblingsmusik</h5>
                     <ul>
                         {% for track in tracks %}
-                        <li>
+                        <li class="perez_fav">
                             {% if track.cover %}
-                            <img src="{{ track.cover }}"
-                                 style="width:42px;height:auto;vertical-align:middle;margin-right:8px;">
+                            <span class="perez_fav_cover"><img src="{{ track.cover }}"></span>
                             {% endif %}
-                            <a href="{{ track.url }}" target="_blank" style="color:inherit;">
+                            <a class="perez_fav_text" href="{{ track.url }}" target="_blank">
                                 {{ track.title }}{% if track.artist %} - {{ track.artist }}{% endif %}
                             </a>
                         </li>

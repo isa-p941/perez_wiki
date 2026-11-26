@@ -18,10 +18,10 @@ _CACHE_TTL = 3600
 # The "list=" value from the playlist's share link. The playlist must be
 # public or unlisted; a private one has no feed.
 _PLAYLIST_ID = "PLQb9Q7TTD4Ys"
-
 _FEED_URL = "https://www.youtube.com/feeds/videos.xml"
 _WATCH_URL = "https://music.youtube.com/watch"
-_MAX_TRACKS = 5
+# Matches letterboxd._MAX_FILMS so both lists on the about page line up.
+_MAX_TRACKS = 4
 
 # The feed's XML namespaces, so its tags can be found by name.
 _NS = {
