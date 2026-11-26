@@ -70,18 +70,18 @@
                         </li>
                         {% else %}
                         {# shown until the playlist is set up, or if YouTube is unreachable #}
-                        <li><img class="perez_logo"
+                        <li class="perez_fav"><img class="perez_fav_logo"
                                  src="{{ url_for("static", filename="img/twy.png") }}">
-                            The Wonder Years</li>
-                        <li><img class="perez_logo"
+                            <span class="perez_fav_text">The Wonder Years</span></li>
+                        <li class="perez_fav"><img class="perez_fav_logo"
                                  src="{{ url_for("static", filename="img/wccompose.png") }}">
-                            Masakatsu Takagi</li>
-                        <li><img class="perez_logo"
+                            <span class="perez_fav_text">Masakatsu Takagi</span></li>
+                        <li class="perez_fav"><img class="perez_fav_logo"
                                  src="{{ url_for("static", filename="img/japanese_house.png") }}">
-                            The Japanese House</li>
-                        <li><img class="perez_logo"
+                            <span class="perez_fav_text">The Japanese House</span></li>
+                        <li class="perez_fav"><img class="perez_fav_logo"
                                  src="{{ url_for("static", filename="img/tyler_childers.png") }}">
-                            Tyler Childers</li>
+                            <span class="perez_fav_text">Tyler Childers</span></li>
                         {% endfor %}
                     </ul>
             </div>

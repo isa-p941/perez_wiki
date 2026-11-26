@@ -108,6 +108,14 @@ a:hover {
     transform: translate(-50%, -50%);
 }
 
+/* Hand-written fallback artists' logos, square like the song covers. */
+.perez_fav_logo {
+    flex: none;
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+}
+
 .perez_fav_text {
     color: inherit;
     display: -webkit-box;
