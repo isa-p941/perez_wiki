@@ -1,8 +1,7 @@
 """Gathers my favorite films from Letterboxd for the about page.
 
-Think of Letterboxd as the hive and this module as the beekeeper: it visits
-the list, collects what it finds, and keeps a jar of it for an hour so the
-bees are not disturbed on every visit. Posters come from TMDB, since
+It visits the list, collects what it finds, and keeps the results for an
+hour so Letterboxd is not asked on every visit. Posters come from TMDB, since
 Letterboxd keeps its own hidden behind JavaScript.
 """
 
@@ -78,7 +77,7 @@ def _tmdb_poster(title, year):
 def _parse_list(html):
     """Picks the films out of a Letterboxd list page.
 
-    Letterboxd has worn two outfits over the years, one tagging films with
+    Letterboxd has used two layouts over the years, one tagging films with
     data-film-* attributes and the other with data-item-*. Both are
     understood here, and a film that appears twice is counted once.
 
@@ -121,9 +120,9 @@ def _parse_list(html):
 def get_favorite_films():
     """Returns my favorite films, with posters where they can be found.
 
-    A jar of results is kept for an hour. If Letterboxd turns us away or
-    comes back empty, the last good jar is served instead, and if there is
-    none, the page gets an empty list and says so politely.
+    Results are kept for an hour. If Letterboxd turns us away or comes back
+    empty, the last good results are served instead, and if there are none,
+    the page gets an empty list.
 
     Returns:
         A list of dicts, each with a "title", a "year" (or None), a

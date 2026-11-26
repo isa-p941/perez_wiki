@@ -1,9 +1,9 @@
-"""Tends the projects page: what I have built, and how each hive is doing.
+"""Builds the projects page: what I have built, and how each build is doing.
 
 Each project is checked against GitHub for its latest commit and the state of
-its latest build, then the whole lot is sorted with the most recently tended
-at the top. The results are kept in a jar for an hour so visitors do not have
-to wait on GitHub.
+its latest build, then the whole lot is sorted with the most recently updated
+at the top. The results are kept for an hour so visitors do not have to wait
+on GitHub.
 """
 
 from flask import Blueprint, render_template
@@ -91,8 +91,8 @@ def _repo_api_url(repo, path):
 def _gh_get(url):
     """Asks the GitHub API a question and returns its answer.
 
-    If a GITHUB_TOKEN is set in the environment it is shown at the door,
-    which earns a much higher rate limit than anonymous visitors get.
+    If a GITHUB_TOKEN is set in the environment it is sent along, which
+    earns a much higher rate limit than anonymous requests get.
 
     Args:
         url: The API address to visit.
@@ -174,7 +174,7 @@ def get_sorted_projects():
 
     All the projects are visited at once rather than one after another, so
     the wait is only as long as the slowest reply. The result is kept for an
-    hour, and a visitor who arrives while the jar is full gets it at once.
+    hour and served straight from memory until it expires.
 
     Returns:
         A list of project dicts sorted by last commit, newest first. Each has
