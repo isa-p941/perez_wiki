@@ -22,7 +22,7 @@ _LIST_URL = _SITE + "/issaisa/list/wiki_favorites/"
 _TMDB_BASE = "https://api.themoviedb.org/3"
 _TMDB_IMG = "https://image.tmdb.org/t/p/w185"
 # Matches youtube_music._MAX_TRACKS so both lists on the about page line up.
-_MAX_FILMS = 4
+_MAX_FILMS = 5
 _UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0"
 
 

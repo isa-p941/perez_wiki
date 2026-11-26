@@ -21,7 +21,7 @@ _PLAYLIST_ID = "PLQb9Q7TTD4Ys"
 _FEED_URL = "https://www.youtube.com/feeds/videos.xml"
 _WATCH_URL = "https://music.youtube.com/watch"
 # Matches letterboxd._MAX_FILMS so both lists on the about page line up.
-_MAX_TRACKS = 4
+_MAX_TRACKS = 5
 
 # The feed's XML namespaces, so its tags can be found by name.
 _NS = {
