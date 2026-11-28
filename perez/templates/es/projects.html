@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+    {% include "header.html" %}
+</head>
+
+<body class=perez_body>
+    {% include "body_header_es.html" %}
+    <div class="container">
+        <br>
+        <h5>Aquí están todos mis proyectos personales y académicos.</h5>
+        <hr class="perez_hr">
+        Haz clic en el logo a la izquierda de cada proyecto para ver su código fuente.
+        <br>
+        Los mantengo cuando el tiempo me lo permite; ordenados por el último commit. El color indica el estado del build.
+        <div class="projects_list">
+            {% for p in projects %}
+            <div class="project">
+                <a href="{{ p.url }}" target="_blank">
+                    <img class="perez_logo" src="{{ url_for('static', filename=p.icon) }}">
+                </a>
+                <span>
+                    <a href="{{ p.url }}" target="_blank" style="color:inherit;text-decoration:none;">
+                        <b>{{ p.name }}</b> - {{ p.desc_es }}
+                    </a>
+                    <br>
+                    {% if p.build_url %}
+                    <a href="{{ p.build_url }}" target="_blank"
+                       style="font-size:0.75em;font-style:italic;text-decoration:none;color:inherit;"
+                       onmouseenter="this.style.setProperty('color','{{ p.build_color }}','important')"
+                       onmouseleave="this.style.removeProperty('color')">
+                    {% else %}
+                    <span style="font-size:0.75em;font-style:italic;">
+                    {% endif %}
+                        <span style="display:inline-block;width:0.65em;height:0.65em;
+                                     background-color:{{ p.build_color }};
+                                     vertical-align:middle;margin-right:0.3em;"></span>
+                        {% if p.last_commit_display %}{{ p.last_commit_display }}{% endif %}
+                    {% if p.build_url %}</a>{% else %}</span>{% endif %}
+                </span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% include "footer.html" %}
+</body>
+
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+    {% include "header.html" %}
+</head>
+
+<body class=perez_body>
+    {% include "body_header_es.html" %}
+    <div class="container">
+        <br>
+        <h6>Bienvenido a perez wiki. Usa los enlaces de arriba para encontrar información sobre mí.</h6>
+        <h6><i>¡Haz clic en la flor para regresar aquí!</i></h6>
+        <hr class="perez_hr">
+        <p class="perez_built_with"><b>Este sitio fue creado con:</b></p>
+        <a href="http://getskeleton.com" target="_blank">
+            <img class="perez_logo" style="width: 32px; length: 32px;"
+                 src="{{ url_for("static", filename="img/skeleton.png") }}">
+            </img>
+        </a>
+        <a href="http://jinja.pocoo.org" target="_blank">
+            <img class="perez_logo"
+                 src="{{ url_for("static", filename="img/jinja.png") }}">
+            </img>
+        </a>
+        <a href="http://flask.pocoo.org" target="_blank">
+            <img class="perez_logo"
+                 src="{{ url_for("static", filename="img/flask.png") }}">
+            </img>
+        </a>
+        <a href="https://gunicorn.org" target="_blank">
+            <img class="perez_logo"
+                 src="{{ url_for("static", filename="img/gunicorn.png") }}">
+            </img>
+        </a>
+        <a href="https://nginx.com" target="_blank">
+            <img class="perez_logo"
+                 src="{{ url_for("static", filename="img/nginx.png") }}">
+            </img>
+        </a>
+        <hr class="perez_hr">
+        <p class="perez_built_with"><b>Este sitio está alojado en:</b></p>
+        <a href="https://linode.com" target="_blank">
+            <img class="perez_logo_linode"
+                 src="{{ url_for("static", filename="img/linode.png") }}">
+            </img>
+        </a>
+    </div>
+    {% include "footer.html" %}
+</body>
+
+</html>

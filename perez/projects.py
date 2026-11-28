@@ -23,6 +23,7 @@ PROJECTS = [
         "name": "perez.wiki",
         "desc_en": "this website! a basic website built on Flask and deployed with GitHub Actions.",
         "desc_de": "diese Website! eine einfache Website, erstellt mit Flask und über GitHub Actions bereitgestellt.",
+        "desc_es": "¡este sitio web! un sitio sencillo hecho con Flask y desplegado con GitHub Actions.",
     },
     {
         "repo": "infra_perez_wiki",
@@ -30,6 +31,7 @@ PROJECTS = [
         "name": "infra_perez_wiki",
         "desc_en": "a cloud infrastructure demonstration that can deploy this website. Deploys Jenkins to an AWS cluster, and deploys Grafana to an Azure cluster, and sets up a deployment pipeline for this website. Demos available upon request.",
         "desc_de": "eine Cloud-Infrastruktur-Demonstration, die diese Website bereitstellen kann. Stellt Jenkins auf einem AWS-Cluster und Grafana auf einem Azure-Cluster bereit und richtet eine Deployment-Pipeline für diese Website ein. Demos auf Anfrage verfügbar.",
+        "desc_es": "una demostración de infraestructura en la nube que puede desplegar este sitio web. Despliega Jenkins en un clúster de AWS y Grafana en un clúster de Azure, y configura un pipeline de despliegue para este sitio. Demos disponibles bajo solicitud.",
     },
     {
         "repo": "find_a_flood",
@@ -37,6 +39,7 @@ PROJECTS = [
         "name": "find_a_flood",
         "desc_en": "a Python CLI that finds potentially flooding rivers near you with NOAA river-gauge data",
         "desc_de": "ein Python-CLI-Tool, das potenziell überflutende Flüsse in deiner Nähe mit NOAA-Pegeldaten findet",
+        "desc_es": "una herramienta de línea de comandos en Python que encuentra ríos con posible riesgo de inundación cerca de ti con datos de los medidores fluviales de la NOAA",
     },
     {
         "repo": "Parallel-Image-Processing",
@@ -44,6 +47,7 @@ PROJECTS = [
         "name": "BCIC",
         "desc_en": "a distributed TensorFlow-based Image Processor",
         "desc_de": "ein verteilter TensorFlow-basierter Bildprozessor",
+        "desc_es": "un procesador de imágenes distribuido basado en TensorFlow",
     },
     {
         "repo": "CyberVision",
@@ -51,6 +55,7 @@ PROJECTS = [
         "name": "CyberVision",
         "desc_en": "a MatLab/Python Image Blender and Motion Detector",
         "desc_de": "ein MatLab/Python Bildmischer und Bewegungsmelder",
+        "desc_es": "un mezclador de imágenes y detector de movimiento en MatLab/Python",
     },
 ]
 

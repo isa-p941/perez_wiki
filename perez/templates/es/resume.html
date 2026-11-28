@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+    {% include "header.html" %}
+</head>
+
+<body class=perez_body>
+    {% include "body_header_es.html" %}
+    <div class="container">
+        <br>
+        <h5>Abajo está una versión en PDF de mi currículum. Haz clic derecho en el documento para descargarlo directamente.</h5>
+        <hr class="perez_hr">
+        <div class="pdf-container">
+            <object class="pdf-viewer"
+                    data="{{ url_for("static", filename="pdf/Resume.pdf") }}?#zoom=85&scrollbar=0&toolbar=0&navpanes=0">
+            </object>
+        </div>
+        <br>
+        <h5>Si el PDF no se muestra, descárgalo
+            <a href="{{ url_for("static", filename="pdf/Resume.pdf") }}">
+                aquí</a>.
+        </h5>
+    </div>
+    {% include "footer.html" %}
+</body>
+
+</html>

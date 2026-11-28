@@ -1,7 +1,12 @@
 <footer class="perez_footer">
     <div class="lang-switch">
-        <span class="lang-active">🇺🇸 EN</span>
-        <span class="lang-divider">|</span>
-        <a class="lang-inactive" href="{{ toggle_url }}">🇩🇪 DE</a>
+        {% for code, label, url in languages %}
+        {% if not loop.first %}<span class="lang-divider">|</span>{% endif %}
+        {% if code == current_lang %}
+        <span class="lang-active">{{ label }}</span>
+        {% else %}
+        <a class="lang-inactive" href="{{ url }}">{{ label }}</a>
+        {% endif %}
+        {% endfor %}
     </div>
 </footer>

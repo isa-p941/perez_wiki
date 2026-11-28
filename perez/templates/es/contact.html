@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+    {% include "header.html" %}
+</head>
+
+<body class=perez_body>
+    {% include "body_header_es.html" %}
+    <div class="container">
+        <br>
+        <h5>Las mejores formas de contactarme son Gmail y LinkedIn.</h5>
+        <hr class="perez_hr">
+        <a href="mailto:carlp941@gmail.com" target="_blank">
+            <img class="perez_logo"
+                 src="{{ url_for("static", filename="img/gmail.png") }}">
+                 <b>Gmail</b>
+            </img>
+        </a>
+        <br>
+        <a href="https://www.linkedin.com/in/carl-perez-2ab649130/"
+           target="_blank">
+            <img class="perez_logo"
+                 src="{{ url_for("static", filename="img/linkedin.png") }}">
+                 <b>LinkedIn</b>
+            </img>
+        </a>
+    </div>
+    {% include "footer.html" %}
+</body>
+
+</html>

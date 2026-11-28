@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+    {% include "header.html" %}
+</head>
+
+<body class=perez_body>
+    {% include "body_header_es.html" %}
+    <div class="container">
+        <br>
+        <h5><i>Soy Perez.</i></h5>
+        <hr class="perez_hr">
+        <p>Soy ingeniero DevOps, apicultor y jardinero.
+         Desde hace {{ engineering_years }} años construyo pipelines de CI/CD y sistemas de monitoreo
+         que mantienen funcionando infraestructura Linux en entornos locales, virtualizados y en la nube.
+         Llevo {{ beekeeping_years }} años criando abejas y cuidando mi jardín.
+         Mi carrera y la apicultura no son tan diferentes: las abejas hacen la miel,
+         pero solo si alguien mantiene sana la colmena. Yo mantengo sanas las colmenas.
+        </p>
+        <hr class="perez_hr">
+        <div class="row">
+            <div class="four columns">
+                <h5 style="margin-bottom: 1rem;">Pasatiempos</h5>
+                <ul>
+                    <li>Apicultura</li>
+                    <li>Jardinería</li>
+                    <li>Cocina</li>
+                    <li>Automatización</li>
+                    <li>Ciencia/teoría política</li>
+                    <li>Mecánica automotriz</li>
+                </ul>
+            </div>
+
+            <div class="four columns">
+                <h5 style="margin-bottom: 1rem;">Películas favoritas</h5>
+                <ul>
+                    {% for film in films %}
+                    <li class="perez_fav">
+                        {% if film.poster %}
+                        <img class="perez_fav_poster" src="{{ film.poster }}">
+                        {% endif %}
+                        {% if film.url %}
+                        <a class="perez_fav_text" href="{{ film.url }}" target="_blank">
+                            {{ film.title }}{% if film.year %} ({{ film.year }}){% endif %}
+                        </a>
+                        {% else %}
+                        <span class="perez_fav_text">
+                            {{ film.title }}{% if film.year %} ({{ film.year }}){% endif %}
+                        </span>
+                        {% endif %}
+                    </li>
+                    {% else %}
+                    <li>No se encontraron películas.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="four columns">
+                <h5 style="margin-bottom: 1rem;">Música favorita</h5>
+                    <ul>
+                        {% for track in tracks %}
+                        <li class="perez_fav">
+                            {% if track.cover %}
+                            <span class="perez_fav_cover"><img src="{{ track.cover }}"></span>
+                            {% endif %}
+                            <a class="perez_fav_text" href="{{ track.url }}" target="_blank">
+                                {{ track.title }}{% if track.artist %} - {{ track.artist }}{% endif %}
+                            </a>
+                        </li>
+                        {% else %}
+                        {# shown until the playlist is set up, or if YouTube is unreachable #}
+                        <li class="perez_fav"><img class="perez_fav_logo"
+                                 src="{{ url_for("static", filename="img/twy.png") }}">
+                            <span class="perez_fav_text">The Wonder Years</span></li>
+                        <li class="perez_fav"><img class="perez_fav_logo"
+                                 src="{{ url_for("static", filename="img/wccompose.png") }}">
+                            <span class="perez_fav_text">Masakatsu Takagi</span></li>
+                        <li class="perez_fav"><img class="perez_fav_logo"
+                                 src="{{ url_for("static", filename="img/japanese_house.png") }}">
+                            <span class="perez_fav_text">The Japanese House</span></li>
+                        <li class="perez_fav"><img class="perez_fav_logo"
+                                 src="{{ url_for("static", filename="img/tyler_childers.png") }}">
+                            <span class="perez_fav_text">Tyler Childers</span></li>
+                        {% endfor %}
+                    </ul>
+            </div>
+        </div>
+    </div>
+    {% include "footer.html" %}
+</body>
+
+</html>

@@ -1,9 +1,10 @@
 import pytest
 from selenium.webdriver.common.by import By
 
-# English pages and their German counterparts
+# English pages and their German and Spanish counterparts
 EN_PAGES = ["/", "/resume", "/projects", "/about", "/contact"]
 DE_PAGES = ["/de", "/de/resume", "/de/projects", "/de/about", "/de/contact"]
+ES_PAGES = ["/es", "/es/resume", "/es/projects", "/es/about", "/es/contact"]
 
 
 def _nav_labels(driver):
@@ -12,7 +13,7 @@ def _nav_labels(driver):
             for a in driver.find_elements(By.CSS_SELECTOR, "header a.button")}
 
 
-@pytest.mark.parametrize("path", EN_PAGES + DE_PAGES)
+@pytest.mark.parametrize("path", EN_PAGES + DE_PAGES + ES_PAGES)
 def test_page_loads(driver, base_url, path):
     """ Every page renders and keeps the site title. """
     driver.get(base_url + path)
@@ -37,4 +38,11 @@ def test_german_nav_present(driver, base_url):
     """ The German home page renders the German nav labels. """
     driver.get(base_url + "/de")
     expected = {"Lebenslauf", "Projekte", "Über mich", "Kontakt"}
+    assert {label.casefold() for label in expected} <= _nav_labels(driver)
+
+
+def test_spanish_nav_present(driver, base_url):
+    """ The Spanish home page renders the Spanish nav labels. """
+    driver.get(base_url + "/es")
+    expected = {"Currículum", "Proyectos", "Sobre mí", "Contacto"}
     assert {label.casefold() for label in expected} <= _nav_labels(driver)

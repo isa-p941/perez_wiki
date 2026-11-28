@@ -1,5 +1,9 @@
 import os
+import re
 from flask import Flask, request
+
+# (code, footer label), in footer order
+LANGUAGES = [("en", "🇺🇸 EN"), ("de", "🇩🇪 DE"), ("es", "🇲🇽 ES")]
 
 def create_app():
     """Create and configure an instance of the Flask application."""
@@ -13,18 +17,25 @@ def create_app():
     os.makedirs(app.instance_path, exist_ok=True)
 
     # apply the blueprints to the app
-    from perez import about, contact, index, projects, resume, de
-    for module in (about, contact, index, projects, resume, de):
+    from perez import about, contact, index, projects, resume, de, es
+    for module in (about, contact, index, projects, resume, de, es):
         app.register_blueprint(module.bp)
 
     @app.context_processor
-    def inject_toggle_url():
+    def inject_languages():
+        """Tells the footer which language is showing and where the others are.
+
+        English pages live at the root; translations under /de and /es.
+        """
         path = request.path
-        if path.startswith('/de'):
-            toggle_url = path[3:] or '/'
-        else:
-            toggle_url = '/de' + path
-        return dict(toggle_url=toggle_url)
+        m = re.match(r"^/(de|es)(?=/|$)", path)
+        current = m.group(1) if m else "en"
+        base = (path[m.end():] or "/") if m else path
+        languages = [
+            (code, label, base if code == "en" else f"/{code}{base}")
+            for code, label in LANGUAGES
+        ]
+        return dict(current_lang=current, languages=languages)
 
     return app
 
