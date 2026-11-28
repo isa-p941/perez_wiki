@@ -5,6 +5,16 @@ from flask import Flask, request
 # (code, footer label), in footer order
 LANGUAGES = [("en", "🇺🇸 EN"), ("de", "🇩🇪 DE"), ("es", "🇲🇽 ES")]
 
+# Header nav: (page slug, label) per language, in button order
+NAV = {
+    "en": [("resume", "Resume"), ("projects", "Projects"),
+           ("about", "About"), ("contact", "Contact")],
+    "de": [("resume", "Lebenslauf"), ("projects", "Projekte"),
+           ("about", "Über mich"), ("contact", "Kontakt")],
+    "es": [("resume", "Currículum"), ("projects", "Proyectos"),
+           ("about", "Sobre mí"), ("contact", "Contacto")],
+}
+
 def create_app():
     """Create and configure an instance of the Flask application."""
     app = Flask(__name__)
@@ -23,9 +33,11 @@ def create_app():
 
     @app.context_processor
     def inject_languages():
-        """Tells the footer which language is showing and where the others are.
+        """Tells the header and footer which language is showing.
 
-        English pages live at the root; translations under /de and /es.
+        English pages live at the root; translations under /de and /es. The
+        header gets its nav labels and link prefix, and the footer gets links
+        to the same page in every other language.
         """
         path = request.path
         m = re.match(r"^/(de|es)(?=/|$)", path)
@@ -35,7 +47,12 @@ def create_app():
             (code, label, base if code == "en" else f"/{code}{base}")
             for code, label in LANGUAGES
         ]
-        return dict(current_lang=current, languages=languages)
+        return dict(
+            current_lang=current,
+            languages=languages,
+            lang_prefix="" if current == "en" else f"/{current}",
+            nav=NAV[current],
+        )
 
     return app
 
